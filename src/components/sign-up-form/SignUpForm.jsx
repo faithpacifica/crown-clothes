@@ -16,6 +16,10 @@ const SignUpForm = () => {
   const { displayName, email, password, confirmPassword } = formFields;
   console.log(formFields);
 
+  const resetFormFields = () => {
+    setFormFields(defaultFormFields);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -29,14 +33,16 @@ const SignUpForm = () => {
         email,
         password
       );
+
       await createUserDocumentFromAuth(user, { displayName });
-
-
+      resetFormFields();
     } catch (error) {
-     if(error.code ==='auth/email-already-in-use') {
-      alert('Cannot create user, email already in use')
-     }
-      console.log("User creation encountered an error ", error);
+      if (error.code === "auth/email-already-in-use") {
+        //TODO: Password should be at least 6 characters (auth/weak-password)
+        alert("Cannot create user, email already in use");
+      } else {
+        console.log("User creation encountered an error ", error);
+      }
     }
   };
 
