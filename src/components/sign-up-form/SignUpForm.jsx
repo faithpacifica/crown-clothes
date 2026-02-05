@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./SignUpForm.scss";
 import FormInput from "../form-input/FormInput";
 import Button from "../button/Button";
+
+import { UserContext } from "../../contexts/user.context";
+
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
@@ -18,6 +21,8 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
   console.log(formFields);
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
@@ -36,13 +41,15 @@ const SignUpForm = () => {
         email,
         password
       );
-
+      setCurrentUser(user);
+      
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
-        //TODO: Password should be at least 6 characters (auth/weak-password)
         alert("Cannot create user, email already in use");
+      } else if (error.code === "auth/weak-password") {
+        alert("Password should be at least 6 characters");
       } else {
         console.log("User creation encountered an error ", error);
       }
@@ -89,7 +96,7 @@ const SignUpForm = () => {
         />
 
         <FormInput
-        label="Confirm Password"
+          label="Confirm Password"
           type="password"
           required
           onChange={handleChange}
