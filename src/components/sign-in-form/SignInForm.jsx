@@ -1,12 +1,11 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import FormInput from "../form-input/FormInput";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/Button";
 
-import { UserContext } from "../../contexts/user.context";
+// import { UserContext } from "../../contexts/user.context" kk emas;
 import {
   signInWithGooglePopup,
-  // createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase";
 
@@ -21,16 +20,15 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  const { setCurrentUser } = useContext(UserContext);
+  // const { setCurrentUser } = useContext(UserContext); kk emas
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    setCurrentUser(user);
-    // await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
+    // setCurrentUser(user);
   };
 
   const handleSubmit = async (event) => {
@@ -41,9 +39,8 @@ const SignInForm = () => {
         email,
         password
       );
-      setCurrentUser(user);
+      // setCurrentUser(user);
       console.log(user);
-
       resetFormFields();
     } catch (error) {
       switch (error.code) {
@@ -54,7 +51,7 @@ const SignInForm = () => {
           alert("no user associated with this email");
           break;
         default:
-          console.log(error);
+          console.log('user sign in failed', error);
       }
     }
   };
