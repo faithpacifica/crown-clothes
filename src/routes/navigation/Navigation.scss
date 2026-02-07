@@ -8,7 +8,7 @@
   .logo-container {
     height: 100%;
     width: 70px;
-    padding: 25px;
+    padding: 20px;  //TODO:smda 15 ga uzgartirish
   }
   .nav-links-container {
     width: 50%;
@@ -18,6 +18,7 @@
     justify-content: flex-end;
     .nav-link {
       padding: 10px 15px;
+      // padding: 2px 5px;  ->TODO:sm da shunga uzgartirish
       cursor: pointer;
     }
   }
