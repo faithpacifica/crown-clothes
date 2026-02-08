@@ -7,12 +7,13 @@
   justify-content: center;
   cursor: pointer;
   .shopping-icon {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
   }
   .item-count {
     position: absolute;
-    font-size: 10px;
+    font-size: 12px;
+    color: red;
     font-weight: bold;
     bottom: 12px;
   }

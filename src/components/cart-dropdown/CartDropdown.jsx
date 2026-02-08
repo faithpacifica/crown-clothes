@@ -4,6 +4,8 @@ import CartItem from "../cart-item/CartItem";
 import "./CartDropdown.scss";
 import { CartContext } from "../../contexts/cart-context";
 
+
+// TODO:refreshda basketichidagi narsalar yuqolyapti
 const CartDropdown = () => {
   const { cartItems } = useContext(CartContext);
 
@@ -14,7 +16,7 @@ const CartDropdown = () => {
           <CartItem key={item.id} cartItem={item} />
         ))}
       </div>
-      <Button>Go to Checkout</Button>
+      <Button >Go to Checkout</Button>
     </div>
   );
 };
