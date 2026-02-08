@@ -1,3 +1,4 @@
+import { clear } from "@testing-library/user-event/dist/clear";
 import { useState, createContext, useEffect } from "react";
 
 // Helper function to find inside existing array any items that exist that match the ID of this product
@@ -24,6 +25,7 @@ export const CartContext = createContext({
   cartItems: [],
   addItemToCart: () => {},
   removeItemFromCart: () => {},
+  clearItemFromCart: () => {},
   cartCount: 0,
 });
 
@@ -67,11 +69,18 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearItemFromCart = (cartItemToClear) => {
+    setCartItems(
+      cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id)
+    );
+  };
+  
   const value = {
     isCartOpen,
     setIsCartOpen,
     addItemToCart,
     removeItemFromCart,
+    clearItemFromCart,
     cartItems,
     cartCount,
   };
