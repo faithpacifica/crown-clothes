@@ -23,6 +23,7 @@ export const CartContext = createContext({
   setIsCartOpen: () => {},
   cartItems: [],
   addItemToCart: () => {},
+  removeItemFromCart: () => {},
   cartCount: 0,
 });
 
@@ -43,10 +44,34 @@ export const CartProvider = ({ children }) => {
     // triggers whenever user clicks the Add To Cart button, what we are going to receive from ProductCard is going to 'productToAdd'
     setCartItems(addCartItem(cartItems, productToAdd));
   };
+
+  const removeItemFromCart = (cartItemToRemove) => {
+    // find the cart item to remove
+    const existingCartItem = cartItems.find(
+      (cartItem) => cartItem.id === cartItemToRemove.id
+    );
+
+    // if quantity is equal to 1, remove that item from the cart
+    if (existingCartItem.quantity === 1) {
+      return setCartItems(
+        cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id)
+      );
+    }
+//return back cartitems with matching cart item with reduced quantity
+    setCartItems(
+      cartItems.map((cartItem) =>
+        cartItem.id === cartItemToRemove.id
+          ? { ...cartItem, quantity: cartItem.quantity - 1 }
+          : cartItem
+      )
+    );
+  };
+
   const value = {
     isCartOpen,
     setIsCartOpen,
     addItemToCart,
+    removeItemFromCart,
     cartItems,
     cartCount,
   };
