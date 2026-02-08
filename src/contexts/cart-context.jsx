@@ -1,4 +1,3 @@
-import { clear } from "@testing-library/user-event/dist/clear";
 import { useState, createContext, useEffect } from "react";
 
 // Helper function to find inside existing array any items that exist that match the ID of this product
@@ -27,19 +26,30 @@ export const CartContext = createContext({
   removeItemFromCart: () => {},
   clearItemFromCart: () => {},
   cartCount: 0,
+  cartTotal: 0,
 });
 
 export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0);
 
+  // calculate cart count whenever cart items change
   useEffect(() => {
     const newCartCount = cartItems.reduce(
       (total, cartItem) => total + cartItem.quantity,
       0
     );
     setCartCount(newCartCount);
+  }, [cartItems]);
+
+  // calculate cart total whenever cart items change
+  useEffect(() => {
+    const newCartTotal = cartItems.reduce(
+      (total, cartItem) => total + cartItem.quantity * cartItem.price, 0
+    );
+    setCartTotal(newCartTotal);
   }, [cartItems]);
 
   const addItemToCart = (productToAdd) => {
@@ -59,7 +69,7 @@ export const CartProvider = ({ children }) => {
         cartItems.filter((cartItem) => cartItem.id !== cartItemToRemove.id)
       );
     }
-//return back cartitems with matching cart item with reduced quantity
+    //return back cartitems with matching cart item with reduced quantity
     setCartItems(
       cartItems.map((cartItem) =>
         cartItem.id === cartItemToRemove.id
@@ -74,7 +84,7 @@ export const CartProvider = ({ children }) => {
       cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id)
     );
   };
-  
+
   const value = {
     isCartOpen,
     setIsCartOpen,
@@ -83,6 +93,7 @@ export const CartProvider = ({ children }) => {
     clearItemFromCart,
     cartItems,
     cartCount,
+    cartTotal,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
