@@ -18,6 +18,8 @@ import {
   setDoc,
   collection, // to get collection reference
   writeBatch, // to perform batch writes
+  query, // query bu degani ma'lumotlarni olish uchun so'rov yuborish
+  getDocs, // bu degani query ni bajarish va natijalarni olish
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -62,6 +64,20 @@ export const addCollectionAndDocuments = async (
   console.log("done");
 }
 
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, 'categories');
+  const q = query(collectionRef); // create a query object based on that collection reference for more complex queries we can add constraints here
+  const querySnapshot = await getDocs(q); //querySnapshot bu degani query ni bajarish va natijalarni olish ,q getDocs ichida yozilgani bu degani shu query ni bajar degani
+
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    // querySnapshot.docs bu degani barcha documents ni oladi ichida ,reduce orqali biz shu documents larni aylanib chiqamiz va har bir document snapshot ni olamiz, acc bu degani accumulator boshida bo'sh object .docSnapshot.data() bu degani document ichidagi data ni oladi
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items; // e.g. acc['hats'] = items
+    return acc; //qaytaradi for example { hats: [array of items], ...  }
+  }, {});
+  return categoryMap; // categoryMap  bu missol uchun { hats: [array of items], ...  }
+}
+
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInfo = {}
@@ -101,15 +117,12 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 
   return await createUserWithEmailAndPassword(auth, email, password);
 };
-
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
-
 export const signOutUser = async () => await signOut(auth);
-
 // Observer
 export const onAuthStateChangedListener = (callback)=>{
   onAuthStateChanged(auth,callback)
