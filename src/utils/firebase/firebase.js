@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+
 } from "firebase/auth";
 
 import {
@@ -15,6 +16,8 @@ import {
   doc, //retrieve document instance inside of firestore store
   getDoc,
   setDoc,
+  collection, // to get collection reference
+  writeBatch, // to perform batch writes
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -42,6 +45,22 @@ export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (
+  collectionKey, // e.g. 'categories'
+  objectsToAdd // array of objects we want to add
+) => {
+  const collectionRef = collection(db, collectionKey); // reference to collection firebase creates one if it does not exist
+  const batch = writeBatch(db); //store each object inside of this new collection as a new document. transaction - successful a set of read and write operations on one or more documents. To perform multiple writes as a single atomic operation
+
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase()); //docRef bu degani document reference ichida collection 'categories' ichida har bir object uchun yangi document create qilamiz uning title asosida  e.g. 'hats'
+    batch.set(docRef, object); //example: 'hats' docRef is the reference to that document inside of collection 'categories'  value is the object itself
+  });
+
+  await batch.commit();
+  console.log("done");
+}
 
 export const createUserDocumentFromAuth = async (
   userAuth,
