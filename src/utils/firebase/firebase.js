@@ -8,7 +8,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-
 } from "firebase/auth";
 
 import {
@@ -50,7 +49,8 @@ export const db = getFirestore();
 
 export const addCollectionAndDocuments = async (
   collectionKey, // e.g. 'categories'
-  objectsToAdd // array of objects we want to add
+  objectsToAdd, // array of objects we want to add
+  field
 ) => {
   const collectionRef = collection(db, collectionKey); // reference to collection firebase creates one if it does not exist
   const batch = writeBatch(db); //store each object inside of this new collection as a new document. transaction - successful a set of read and write operations on one or more documents. To perform multiple writes as a single atomic operation
@@ -122,6 +122,7 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
+
 export const signOutUser = async () => await signOut(auth);
 // Observer
 export const onAuthStateChangedListener = (callback)=>{

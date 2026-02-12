@@ -31,12 +31,8 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const { user } = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      await signInAuthUserWithEmailAndPassword(email, password);
       // TODO:email bn password bn kirib bulmayapti
-      console.log(user);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
@@ -47,7 +43,7 @@ const SignInForm = () => {
           alert("no user associated with this email");
           break;
         default:
-          console.log('user sign in failed', error);
+          console.log("user sign in failed", error);
       }
     }
   };
@@ -88,7 +84,7 @@ const SignInForm = () => {
             buttonType={BUTTON_TYPE_CLASSES.google}
             onClick={signInWithGoogle}
           >
-            Google sign in
+            Google Sign In
           </Button>
         </div>
       </form>
