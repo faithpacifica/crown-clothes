@@ -13,6 +13,7 @@ const CheckoutItem = ({ cartItem }) => {
   const removeItemHandler = () => removeItemFromCart(cartItem);
 
   return (
+    // TODO: responsive qilish kerak
     <div className="checkout-item-container">
       <div className="image-container">
         <img src={imageUrl} alt={`${name}`} />
